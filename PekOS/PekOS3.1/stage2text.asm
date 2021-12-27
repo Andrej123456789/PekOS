@@ -6,4 +6,4 @@
     pterm_str db '<pTerm>',10,13,'Welcome to pTerm V1.7.6 | still in development |',13,10,'You cant exit this app cuz i fucked up the code',10,13,'',0
     cr_str db '<List of other applications> ',13,10,'1) Notepad',13,10,'2) Calculator',13,10,'3) Settings',' ',13,10,'Press any key to exit this page',0
     inst db '<Instructions>',13,10,' To open apps simply press the keyboard number equivilent or the OS will bug out',10,13,' ',13,10,'Press any key to exit this page',0
-    help db '<Help & Contacts>',13,10,'If you are expiriencing an issue or a bug contact me on github',10,13,'Github Username > StjepanBM1',13,10,'Press any key to exit this page',0
+    help db '<Help & Contacts>',13,10,'If you are expiriencing an issue or a bug contact me on github',10,13,'Github Username > StjepanBM1',13,10,'Github page> https://github.com/StjepanBM1/PekOS',13,10,'Press any key to exit this page',0
