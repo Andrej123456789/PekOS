@@ -4,20 +4,20 @@ ORG STAGE2_RUN_OFS
 BITS 16
 
 start:
-    ; Removed the segment and stack code
+
     call cls
-    MOV AH, 06h    ; Scroll up function
+    MOV AH, 06h
     XOR AL, AL     ; Clear entire screen
-    XOR CX, CX     ; Upper left corner CH=row, CL=column
-    MOV DX, 184FH  ; lower right corner DH=row, DL=column
+    XOR CX, CX
+    MOV DX, 184FH
     MOV BH, 1fh    ; YellowOnBlue
     INT 10H
 
     mov si, osvermsg
     call print_string
 
-    mov si, text_string ; Put string position into SI
-    call print_string   ; Call our string-printing routine
+    mov si, text_string
+    call print_string
 push bx ;push registers
 push cx
 push dx
@@ -39,7 +39,7 @@ int 16h
        je Instructions
        cmp al, '8'
        je Help
-       jmp $            ; Jump here - infinite loop!
+       jmp $            ; Jump here - infinite loop
 
     call .message
     %include "stage2text.asm"
@@ -60,8 +60,8 @@ int 0x15
 
 pTerm:
 call cls
-mov si, pterm_str ; Put string position into SI
-call print_string   ; Call our string-printing routine
+mov si, pterm_str
+call print_string
 call mainloop
 
 %include "pterm.asm"
@@ -87,9 +87,9 @@ je start
 
 other:
 call cls
-mov si, cr_str ; Put string position into SI
-call print_string   ; Call our string-printing routine
-push bx ;push registers
+mov si, cr_str
+call print_string
+push bx
 push cx
 push dx
 mov ah,0h
@@ -98,9 +98,9 @@ je start
 
 Instructions:
 call cls
-mov si, inst ; Put string position into SI
-call print_string   ; Call our string-printing routine
-push bx ;push registers
+mov si, inst
+call print_string
+push bx
 push cx
 push dx
 mov ah,0h
@@ -109,23 +109,23 @@ je start
 
 Help:
 call cls
-mov si, help ; Put string position into SI
-call print_string   ; Call our string-printing routine
-push bx ;push registers
+mov si, help
+call print_string
+push bx
 push cx
 push dx
 mov ah,0h
 int 16h
 je start
 
-;rint_string:           ; Routine: output string in SI to screen
-    ;mov ah, 0Eh     ; int 10h 'print char' function
+;rint_string:
+    ;mov ah, 0Eh
 
 .repeat:
-    lodsb           ; Get character from string
+    lodsb
     cmp al, 0
-    je .done        ; If char is zero, end of string
-    int 10h         ; Otherwise, print it
+    je .done
+    int 10h
     jmp .repeat
 
 .done:
