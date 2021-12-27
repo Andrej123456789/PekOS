@@ -31,10 +31,6 @@
  msg_help db 'pTerm commands> help, restart', 0x0D, 0x0A, 0
  buffer times 64 db 0
  
- ; ================
- ; calls start here
- ; ================
- 
  print_string:
    lodsb        ; grab a byte from SI
  
@@ -116,7 +112,7 @@
  
    inc di     ; increment DI
    inc si     ; increment SI
-   jmp .loop  ; loop!
+   jmp .loop  ; loop
  
  .notequal:
    clc  ; not equal, clear the carry flag
