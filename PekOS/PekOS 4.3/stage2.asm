@@ -4,7 +4,6 @@ ORG STAGE2_RUN_OFS
 BITS 16
 
 start:
-    ; Removed the segment and stack code
     call cls
     MOV AH, 06h    ; Scroll up function
     XOR AL, AL     ; Clear entire screen
@@ -21,7 +20,7 @@ start:
 
     mov si, text_string ; Put string position into SI
     call print_string   ; Call our string-printing routine
-push bx ;push registers
+push bx
 push cx
 push dx
 mov ah,0h
