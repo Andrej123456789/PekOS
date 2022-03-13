@@ -6,7 +6,7 @@ PekOS is a small OS made in assembly. I develop PekOS in my free time so updates
 
 # VERSION DESCRIPTION
 
-Version 3.1 - first release of PekOS
+Version 3.1 - first public release of PekOS
 
 Version 4.3 - updated pTerm
 
