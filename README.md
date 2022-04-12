@@ -12,7 +12,7 @@ Version 4.3 - updated pTerm
 
 Version 5.1 - reworked some stuff and updated pTerm and changed color of background
 
-Version 6.33 - New look for the OS. Laying the ground work for C++, and 64-bit support
+Version 6.33 - New look for the OS. Laying the ground work for C++, and GUI
 
 # System Requirements
 
