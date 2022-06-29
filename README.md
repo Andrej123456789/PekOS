@@ -24,6 +24,8 @@ DISK SPACE = 25MB
 
 # Requirements for compilation
 
+Debian based system recommend
+
 CC = clang-11
 
 ASM = FASM
