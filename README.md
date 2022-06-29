@@ -1,6 +1,8 @@
 
 # About PekOS
-PekOS is a small OS made in assembly. I develop PekOS in my free time so updates might be slow 
+PekOS is a 32 bit (maybe 64 bit in future?) OS made in C & Assembly. I develop PekOS in my free time.
+
+PekOS 7 was built on top of Queso-fuego OS Dev tutorial -> https://github.com/queso-fuego/amateuros
 
 ![PekOSlogonew](https://user-images.githubusercontent.com/94230991/149319315-a9a305ab-6b3d-4501-a50e-cd7600890cb8.png)  PekOS logo
 
