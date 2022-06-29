@@ -14,6 +14,8 @@ Version 5.1 - reworked some stuff and updated pTerm and changed color of backgro
 
 Version 6.33 - New look for the OS. Laying the ground work for C/C++
 
+Version 7    - 7.x kernel, 32 bit support, mix of C & ASM, new shell, new file system, etc.
+
 # System Requirements
 
 RAM = 1
