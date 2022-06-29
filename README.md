@@ -16,9 +16,17 @@ Version 6.33 - New look for the OS. Laying the ground work for C/C++
 
 # System Requirements
 
-RAM = ?
+RAM = 1
+
+32 BIT PC
 
 DISK SPACE = 25MB
+
+# Requirements for compilation
+
+CC = clang-11
+
+ASM = FASM
 
 # Photos
 
