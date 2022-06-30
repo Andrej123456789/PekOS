@@ -1,0 +1,16 @@
+
+set_bpm(140);
+set_time_signature(4, QUARTER);
+
+for (int i = 0; i < 2; i++)
+{
+
+    quarter_note(A4);
+    quarter_note(C5);
+    quarter_note(Fs4);
+    quarter_note(Bb3);
+    quarter_note(F4);
+    quarter_note(Bb5);
+    half_note(Db4);
+
+}

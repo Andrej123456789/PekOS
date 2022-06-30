@@ -1,6 +1,7 @@
 // =========================================================================== 
-// Kernel.c: basic 'kernel' loaded from 2nd stage bootloader
+// PekOS V7.X kernel
 // ===========================================================================
+
 #include "C/stdint.h"
 #include "C/stdlib.h"
 #include "C/string.h"
@@ -65,11 +66,13 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
     uint8_t *cmdRenFile  = "rn\0";         // Rename a file in the file table
     uint8_t *cmdPrtmemmap = "memmap\0";  // Print physical memory map info
     uint8_t *cmdChgColors = "colors\0";  // Change current fg/bg colors
-    uint8_t *cmdChgFont   = "font\0";    // Change current font
+    uint8_t *cmdChgFont   = "fonts\0";    // Change current font
     uint8_t *cmdSleep     = "sleep\0";      // Sleep for a # of seconds
     uint8_t *cmdMSleep    = "msleep\0";     // Sleep for a # of milliseconds
     uint8_t *cmdShowDateTime = "date\0";  // Show CMOS RTC date/time values
     uint8_t *cmdSoundTest = "sound\0";  // Test pc speaker square wave sound
+    uint8_t *cmdOSVer     = "ver\0";    // print out OS info
+    uint8_t *cmdHelp      = "help\0";   // help message / command
     uint8_t fileExt[3];
     uint8_t *fileBin = "bin\0";
     uint8_t *fileTxt = "txt\0";
@@ -78,9 +81,9 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
     uint8_t *windowsMsg     = "\r\n" "Oops! Something went wrong :(" "\r\n\0";
     uint8_t *notFoundString = "\r\n" "[!!] Program/file not found!, Try again? (Y)" "\r\n\0";
     uint8_t *sectNotFound   = "\r\n" "[!!] Sector not found!, Try again? (Y)" "\r\n\0";
-    uint8_t *menuString     = "------------------------------\r\n"
-                              "   PekOS 7 ''Neptune'' Booted   \r\n"
-                              "------------------------------\r\n\r\n\0";
+    uint8_t *menuString     = "--------------------------------\r\n"
+                              "   PekOS 7.1 ''Ceres'' Booted   \r\n"
+                              "--------------------------------\r\n\r\n\0";
     uint8_t *failure        = "\r\n" "[!!] Command/Program not found, Try again" "\r\n\0";
     uint8_t *prompt         = "] \0";
     uint8_t *pgmNotLoaded   = "\r\n" "[!!] Program found but not loaded, Try Again" "\r\n\0";
@@ -142,6 +145,11 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
     // 1193182 MHZ / 1193 = ~1000
     set_pit_channel_mode_frequency(0, 2, 1193);
 
+    // start up sound
+    enable_pc_speaker();
+    #include "../include/sound/start.mus"
+    disable_pc_speaker();
+
     // After setting up hardware interrupts & PIC, set IF to enable 
     //   non-exception and not NMI hardware interrupts
     __asm__ __volatile__("sti");
@@ -162,7 +170,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
     clear_screen(user_gfx_info->bg_color);
 
     // Print OS boot message
-    print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n");
+    print_string(&kernel_cursor_x, &kernel_cursor_y, "");
     print_string(&kernel_cursor_x, &kernel_cursor_y, menuString);
 
     // --------------------------------------------------------------------
@@ -269,6 +277,73 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
             // --------------------------------------------------------------------
             print_fileTable(&kernel_cursor_x, &kernel_cursor_y);
             continue;
+        }
+
+        if (strncmp(tokens, cmdOSVer, strlen(cmdOSVer)) == 0)
+        {
+            // --------------------------------------------------------------------
+            // Print out the OS version
+            // --------------------------------------------------------------------
+
+            uint32_t num_entries = *(uint32_t *)0x8500;         // Number of SMAP entries
+            SMAP_entry_t *SMAP_entry = (SMAP_entry_t *)0x8504;  // Memory map entries start point
+
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "PekOS Version    :: 7.1 ''Ceres''\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "Kernel Version   :: 7.X\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "PekOS Bootloader :: V7\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n");
+
+
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "Total memory in bytes: ");
+
+            SMAP_entry--;   // Get last SMAP entry
+            print_hex(&kernel_cursor_x, &kernel_cursor_y, SMAP_entry->base_address + SMAP_entry->length - 1);
+        
+            // Print out memory manager block info:
+            //   total memory in 4KB blocks, total # of used blocks, total # of free blocks
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nTotal 4KB blocks: ");
+            print_dec(&kernel_cursor_x, &kernel_cursor_y, max_blocks);
+
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nUsed or reserved blocks: ");
+            print_dec(&kernel_cursor_x, &kernel_cursor_y, used_blocks);
+
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nFree or available blocks: ");
+            print_dec(&kernel_cursor_x, &kernel_cursor_y, max_blocks - used_blocks);
+
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n");
+
+            continue;
+
+        }
+
+        if (strncmp(tokens, cmdHelp, strlen(cmdHelp)) == 0)
+        {
+            // --------------------------------------------------------------------
+            // Help command
+            // --------------------------------------------------------------------
+
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nHelp >>\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   ls       - print out file table\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   reboot   - reboot the system\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   reg      - print out the registers\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   gfxtst   - graphics test\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   hlt      - halt the system\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   clr      - clear the screen\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   shutdown - shuts down the system\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   rm       - removes a file\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   rn       - rename a file\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   memmap   - print out the memory map\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   colors   - color settings\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   fonts    - font settings\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   sleep    - halt the system for X seconds\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   msleep   - halt the system for X miliseconds\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   date     - display time & date\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   sound    - play a sound file (*.mus)\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   ver      - OS info & ver\r\n");
+
+            continue;
+
         }
 
         if (strncmp(tokens, cmdReboot, strlen(cmdReboot)) == 0) {
@@ -593,7 +668,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
 
             // Check if file has .fnt extension
             if (strncmp(file_ptr+10, "fnt", 3) != 0) {
-                print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nError: file is not a font\r\n"); 
+                print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n[!!] file is not a font\r\n"); 
                 move_cursor(kernel_cursor_x, kernel_cursor_y);
 
                 continue;
@@ -605,7 +680,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
 
             // File is a valid font, try to load it to memory
             if (!load_file(tokens+10, tokens_length[1], (uint32_t)FONT_ADDRESS, fileExt)) {
-                print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nError: file could not be loaded\r\n"); 
+                print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n[!!] file could not be loaded\r\n"); 
                 move_cursor(kernel_cursor_x, kernel_cursor_y);
 
                 continue;
@@ -649,7 +724,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
 
             if (!show_datetime) {
                 // Blank out date/time
-                uint16_t x = 0, y = 0;
+                uint16_t x = 50, y = 50;
                 print_string(&x, &y, "                   "); // Overwrite date/time with spaces
             }
 
@@ -661,7 +736,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
         if (strncmp(tokens, cmdSoundTest, strlen(cmdSoundTest)) == 0) {
             enable_pc_speaker();
 
-            #include "../include/sound/italianplumberbrothers.mus"
+            #include "../include/sound/sound.mus"
 
             disable_pc_speaker();
 
@@ -696,7 +771,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
             uint32_t phys_addr = (uint32_t)allocate_page(&page);
 
             if (!map_page((void *)phys_addr, (void *)(entry_point + i*PAGE_SIZE)))
-                print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nCouldn't map pages, may be out of memory :'(");
+                print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n[!!] Couldn't map pages\r\n[??] Might be out of memory?\r\n");
         }
 
         print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n" "Allocated to virtual address ");
