@@ -282,7 +282,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
         if (strncmp(tokens, cmdOSVer, strlen(cmdOSVer)) == 0)
         {
             // --------------------------------------------------------------------
-            // Print out the OS version
+            // Print out the information about the OS
             // --------------------------------------------------------------------
 
             uint32_t num_entries = *(uint32_t *)0x8500;         // Number of SMAP entries
@@ -320,7 +320,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
         if (strncmp(tokens, cmdHelp, strlen(cmdHelp)) == 0)
         {
             // --------------------------------------------------------------------
-            // Help command
+            // Help command 
             // --------------------------------------------------------------------
 
             print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nHelp >>\r\n");

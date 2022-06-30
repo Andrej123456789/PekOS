@@ -2,6 +2,5 @@
 set_bpm(120);
 set_time_signature(4, QUARTER);
 
-// closest to Mac startup -> A4 (maybe As4)
-
-eigth_note(C6);
+// Boot sound
+eigth_note(A4);

@@ -33,6 +33,7 @@ __attribute__ ((interrupt)) void page_fault_handler(int_frame_32_t *frame, const
     user_gfx_info->bg_color = convert_color(0x000000FF);           // Red
     user_gfx_info->fg_color = convert_color(0xFFFFFFFF);          // White
     
+    // Clear the screen
     clear_screen(user_gfx_info->bg_color);
 
     print_string(&x, &y, ":(\r\nPekOS has ran into a page fault exception and has crashed.\r\n");

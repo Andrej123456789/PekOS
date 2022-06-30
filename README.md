@@ -16,7 +16,7 @@ Version 6.33 - New look for the OS. Laying the ground work for C/C++
 
 Version 7    - 7.x kernel added, 32 bit support, mix of C & ASM, new shell, new file system, etc.
 
-Version 7.1  - Minor bug fixes, added a "help" & "ver" commands, added a start up sound, new sound test file & other minor changes.
+Version 7.1  - Minor bug fixes, added a "help" & "ver" commands, added a start up sound, new sound test file & other minor changes
 
 # System Requirements
 
