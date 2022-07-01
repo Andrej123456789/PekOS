@@ -13,7 +13,7 @@ TMPFILES = bootSect fileTable $(ASM_FILES) $(C_FILES)
 BINFILES = $(TMPFILES:%=$(BINDIR)%.bin)
 
 # Make final OS.bin binary - padding out to full 1.44MB "floppy" bochs img
-OS: reset_filetable $(ASM_FILES) $(C_FILES)
+PekOS: reset_filetable $(ASM_FILES) $(C_FILES)
 	@size=$$(($$(wc -c < $(BINDIR)fileTable.bin)));\
 	newsize=$$((size - $$((size % 512)) + 512));\
 	dd if=/dev/zero of=$(BINDIR)fileTable.bin bs=1 seek=$$size count=$$((newsize - size)) status=none

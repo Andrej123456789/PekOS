@@ -1,5 +1,5 @@
 ;;;
-;;; font file - 0-127 for ascii, 8x16 pixels each. Stored as 1 byte (8 bits) * 16 = 16 bytes per char, 127*16 = 2048 = 4 512 byte sectors
+;;; PekOS font file A - 0-127 for ascii, 8x16 pixels each. Stored as 1 byte (8 bits) * 16 = 16 bytes per char, 127*16 = 2048 = 4 512 byte sectors
 ;;; based on GNU Unifont 8x16
 ;;;
 ;; Font "header" for width & height
@@ -1012,7 +1012,6 @@ db 00000000b,\
 ;; Open bracket '['
 db 00000000b,\
    00000000b,\
-   00000000b,\
    11111111b,\
    11000000b,\
    11000000b,\
@@ -1022,8 +1021,9 @@ db 00000000b,\
    11000000b,\
    11000000b,\
    11000000b,\
+   11000000b,\
+   11000000b,\
    11111111b,\
-   00000000b,\
    00000000b,\
    00000000b
 ;; Backslash '\'
@@ -1046,8 +1046,7 @@ db 00000000b,\
 ;; Close bracket ']'
 db 00000000b,\
    00000000b,\
-   00000000b,\
-   11111111b,\
+   01111111b,\
    00000011b,\
    00000011b,\
    00000011b,\
@@ -1056,8 +1055,9 @@ db 00000000b,\
    00000011b,\
    00000011b,\
    00000011b,\
-   11111111b,\
-   00000000b,\
+   00000011b,\
+   00000011b,\
+   01111111b,\
    00000000b,\
    00000000b
 ;; Caret '^'
@@ -1637,7 +1637,7 @@ db 00000000b,\
    00000000b,\
    00000000b,\
    00000000b,\
-   11111110b
+   00000000b
 
 ;; End of visible ascii characters
    times 2048-($-$$) db 0

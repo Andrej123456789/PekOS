@@ -1,6 +1,6 @@
 
-set_bpm(120);
-set_time_signature(4, QUARTER);
+set_bpm(40);
+set_time_signature(3, QUARTER);
 
 // Boot sound
-eigth_note(A4);
+thirty2nd_note(C6);

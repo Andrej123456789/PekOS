@@ -39,7 +39,7 @@ case "$filename" in
     fileTable)
         printf "%s" "txt" >> $filetable
         ;;
-    testfont|termu16n|termu18n)
+    PekFontA|PekFont16n|PekFont18n)
         printf "%s" "fnt" >> $filetable
         ;;
     *)

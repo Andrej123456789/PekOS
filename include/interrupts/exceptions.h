@@ -30,7 +30,7 @@ __attribute__ ((interrupt)) void page_fault_handler(int_frame_32_t *frame, const
     uint32_t color = user_gfx_info->fg_color;   // Save current text color
     uint32_t bad_address = 0;
 
-    user_gfx_info->bg_color = convert_color(0x000000FF);           // Red
+    user_gfx_info->bg_color = convert_color(0x000000FF);           // blue
     user_gfx_info->fg_color = convert_color(0xFFFFFFFF);          // White
     
     // Clear the screen

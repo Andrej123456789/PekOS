@@ -261,10 +261,30 @@ void thirty2nd_rest(void)
 }
 
 // Dotted notes play for their time duration + half of their time duration
-// TODO: Add more dotted* functions
+
+void dotted_whole_note(const note_freq_t note)
+{
+    play_note(note, whole_note_duration + half_note_duration);
+}
+
+void dotted_half_note(const note_freq_t note)
+{
+    play_note(note, half_note_duration + quarter_note_duration);
+}
+
+void dotted_quarter_note(const note_freq_t note)
+{
+    play_note(note, quarter_note_duration + eigth_note_duration);
+}
+
 void dotted_eigth_note(const note_freq_t note)
 {
     play_note(note, eigth_note_duration + sixteenth_note_duration);
+}
+
+void dotted_sixteenth_note(const note_freq_t note)
+{
+    play_note(note, sixteenth_note_duration + thirty2nd_note_duration);
 }
 
 // Triplets play 3 notes in the span of 2

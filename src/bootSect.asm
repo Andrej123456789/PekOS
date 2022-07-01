@@ -194,7 +194,7 @@ load_sectors:
 drive_num: db 0
 bootloader_string: db '2ndstage  '
 prekernel_string: db '3rdstage  '
-font_string: db 'termu18n  '
+font_string: db 'PekFont16n'
 cylinder: dw 0
 head: db 0
 start_sector: db 0

@@ -1,9 +1,10 @@
 
 // small "song" used in sound testing
 
-set_bpm(140);
+set_bpm(120);
 set_time_signature(4, QUARTER);
 
+// A
 for (int i = 0; i < 2; i++)
 {
 

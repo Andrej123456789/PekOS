@@ -18,6 +18,8 @@ Version 7    - 7.x kernel added, 32 bit support, mix of C & ASM, new shell, new 
 
 Version 7.1  - Minor bug fixes, added a "help" & "ver" commands, added a start up sound, new sound test file & other minor changes
 
+Version 7.2  - Groundwork for user account system, "root" & "whois" commands added, "ver" command updated, new command line look, new font names
+
 # System Requirements
 
 RAM = 1 MB

@@ -49,8 +49,24 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
     uint8_t token_file_name1[11] = {0};   // Filename 1 for commands
     uint8_t token_file_name2[11] = {0};   // Filename 2 for commands
 
+    // Users
+    uint8_t *usr_root   = "ted\0";         // name of our beloved bear Ted (PekOS mascot) -- ***MASCOT WORK IN PROGRESS***
+    uint8_t *usr_guest  = "Guest\0";      // Guest username
+    char usr_usr[256]   = {0};         // User input for a username
+
+    uint8_t *user;
+
+    uint8_t *usr_domain  = "~PekOS\0";
+
+    // Bool
+    static bool is_root = false;
+    static bool is_setup_done = false;
+
+    // chars & strings
+
     char cmdString[256] = {0};         // User input string  
     char *cmdString_ptr = cmdString;
+
     uint8_t input_char   = 0;       // User input character
     uint8_t input_length;           // Length of user input
     uint16_t idx         = 0;
@@ -62,6 +78,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
     uint8_t *cmdCls	     = "clr\0";         // Clear screen by scrolling
     uint8_t *cmdShutdown = "shutdown\0";    // Close QEMU emulator
     uint8_t *cmdEditor   = "editor\0";	    // Launch editor program
+    uint8_t *cmdEcho     = "echo\0";        // prints out the user input
     uint8_t *cmdDelFile  = "rm\0";		    // Delete a file from disk
     uint8_t *cmdRenFile  = "rn\0";         // Rename a file in the file table
     uint8_t *cmdPrtmemmap = "memmap\0";  // Print physical memory map info
@@ -73,17 +90,19 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
     uint8_t *cmdSoundTest = "sound\0";  // Test pc speaker square wave sound
     uint8_t *cmdOSVer     = "ver\0";    // print out OS info
     uint8_t *cmdHelp      = "help\0";   // help message / command
-    uint8_t fileExt[3];
-    uint8_t *fileBin = "bin\0";
-    uint8_t *fileTxt = "txt\0";
+    uint8_t *cmdwho       = "whois\0";  // display name of the user
+    uint8_t *cmdroot      = "root\0";   // enter root mode
+    uint8_t fileExt[4];
+    uint8_t *fileBin = "bin \0";
+    uint8_t *fileTxt = "txt \0";
     uint8_t fileSize = 0;
     uint8_t *file_ptr;
     uint8_t *windowsMsg     = "\r\n" "Oops! Something went wrong :(" "\r\n\0";
     uint8_t *notFoundString = "\r\n" "[!!] Program/file not found!, Try again? (Y)" "\r\n\0";
     uint8_t *sectNotFound   = "\r\n" "[!!] Sector not found!, Try again? (Y)" "\r\n\0";
-    uint8_t *menuString     = "--------------------------------\r\n"
-                              "   PekOS 7.1 ''Ceres'' Booted   \r\n"
-                              "--------------------------------\r\n\r\n\0";
+    uint8_t *menuString     = "\r\n------------------------------------------\r\n"
+                              "   PekOS 7.2 ''Service Pack 1'' Booted   \r\n"
+                              "------------------------------------------\n\r\n\0";
     uint8_t *failure        = "\r\n" "[!!] Command/Program not found, Try again" "\r\n\0";
     uint8_t *prompt         = "] \0";
     uint8_t *pgmNotLoaded   = "\r\n" "[!!] Program found but not loaded, Try Again" "\r\n\0";
@@ -157,8 +176,8 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
     // Set intial colors
     while (!user_gfx_info->fg_color) {
         if (gfx_mode->bits_per_pixel > 8) {
-            user_gfx_info->fg_color = convert_color(0x00EEEEEE);
-            user_gfx_info->bg_color = convert_color(0x00222222);
+            user_gfx_info->fg_color = convert_color(0x0000FF00);
+            user_gfx_info->bg_color = convert_color(0x00000000);
         } else {
             // Assuming VGA palette
             user_gfx_info->fg_color = convert_color(0x02);
@@ -185,11 +204,32 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
         memset(token_file_name2, 0 , 10);
         memset(cmdString, 0 , 255);
 
+        memset(usr_usr, 0, 255);
+
         // Print prompt
+
+        if (is_root == true)
+            print_string(&kernel_cursor_x, &kernel_cursor_y, usr_root);
+
+        else if (is_setup_done == true)
+            print_string(&kernel_cursor_x, &kernel_cursor_y, usr_usr);
+
+        else if (is_setup_done == false  && is_root == false)
+            print_string(&kernel_cursor_x, &kernel_cursor_y, usr_guest);
+            print_string(&kernel_cursor_x, &kernel_cursor_y, usr_domain);
+        
+
         print_string(&kernel_cursor_x, &kernel_cursor_y, prompt);
         move_cursor(kernel_cursor_x, kernel_cursor_y);
         
         input_length = 0;   // reset byte counter of input
+
+        // Check the user
+        if (is_root == false)
+            user = usr_guest;
+
+        else if (is_root == true)
+            user = usr_root;
 
         // Key loop - get input from user
         while (1) {
@@ -279,6 +319,25 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
             continue;
         }
 
+        if (strncmp(tokens, cmdwho, strlen(cmdwho)) == 0)
+        {
+            
+            if (is_root == true)
+                print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nted\r\n");
+            
+            else
+                print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nGuest\r\n");
+
+            continue;
+        }
+
+        if (strncmp(tokens, cmdroot, strlen(cmdroot)) == 0)
+        {
+            is_root = true;
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n");
+            continue;
+        }
+
         if (strncmp(tokens, cmdOSVer, strlen(cmdOSVer)) == 0)
         {
             // --------------------------------------------------------------------
@@ -289,12 +348,17 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
             SMAP_entry_t *SMAP_entry = (SMAP_entry_t *)0x8504;  // Memory map entries start point
 
             print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "PekOS Version    :: 7.1 ''Ceres''\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nUser > ");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, user);
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n");
+
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nOS Info >>\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "PekOS Version    :: 7.2 ''Service Pack 1''\r\n");
             print_string(&kernel_cursor_x, &kernel_cursor_y, "Kernel Version   :: 7.X\r\n");
             print_string(&kernel_cursor_x, &kernel_cursor_y, "PekOS Bootloader :: V7\r\n");
             print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n");
 
-
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nMemory Info >>\r\n");
             print_string(&kernel_cursor_x, &kernel_cursor_y, "Total memory in bytes: ");
 
             SMAP_entry--;   // Get last SMAP entry
@@ -311,7 +375,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
             print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nFree or available blocks: ");
             print_dec(&kernel_cursor_x, &kernel_cursor_y, max_blocks - used_blocks);
 
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\n \r\n");
 
             continue;
 
@@ -324,24 +388,25 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
             // --------------------------------------------------------------------
 
             print_string(&kernel_cursor_x, &kernel_cursor_y, "\r\nHelp >>\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   ls       - print out file table\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   reboot   - reboot the system\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   reg      - print out the registers\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   gfxtst   - graphics test\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   hlt      - halt the system\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   clr      - clear the screen\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   shutdown - shuts down the system\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   rm       - removes a file\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   rn       - rename a file\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   memmap   - print out the memory map\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   colors   - color settings\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   fonts    - font settings\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   sleep    - halt the system for X seconds\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   msleep   - halt the system for X miliseconds\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   date     - display time & date\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   sound    - play a sound file (*.mus)\r\n");
-            print_string(&kernel_cursor_x, &kernel_cursor_y, "   ver      - OS info & ver\r\n");
-
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   ls       -     print out file table\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   reboot   -     reboot the system\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   reg      -     print out the registers\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   gfxtst   -     graphics test\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   hlt      -     halt the system\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   clr      -     clear the screen\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   shutdown -     shuts down the system\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   rm       -     removes a file\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   rn       -     rename a file\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   memmap   -     print out the memory map\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   colors   -     color settings\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   fonts    -     font settings\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   sleep    -     halt the system for X seconds\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   msleep   -     halt the system for X miliseconds\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   date     -     display time & date\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   sound    -     play a sound file (*.mus)\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   ver      -     OS info & ver\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   whois    -     display name of the user\r\n");
+            print_string(&kernel_cursor_x, &kernel_cursor_y, "   root     -     enter the root mode\r\n");
             continue;
 
         }
@@ -430,6 +495,13 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
             p0.Y = 1080/2 + 100;
             p1.X = 1920/2 - 100;
             p1.Y = 1080/2 + 200;
+            draw_rect(p0, p1, convert_color(0x0033CEFF));  // Kind of teal maybe
+
+             // Draw rectangle test
+            p0.X = 1920/2 - 10;
+            p0.Y = 1080/2 + 10;
+            p1.X = 1920/2 - 10;
+            p1.Y = 1080/2 + 10;
             draw_rect(p0, p1, convert_color(0x0033CEFF));  // Kind of teal maybe
 
             // Draw polygon test - hexagon
