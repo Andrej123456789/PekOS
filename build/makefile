@@ -3,8 +3,7 @@
 #-----------------------------------------
 # Make variables
 CC=clang
-CFLAGS = -std=c17 -m32 -march=i386 -ffreestanding -fno-builtin -nostdinc -Os -fno-stack-protector	-Wno-pointer-sign\
-	-I../include/
+CFLAGS = -std=c17 -m32 -march=i386 -ffreestanding -fno-builtin -fno-PIC -nostdinc -Os -fno-stack-protector -Wno-pointer-sign -I../include/
 SRCDIR = ../src/
 BINDIR = ../bin/
 C_FILES != find $(SRCDIR) -name *.c -exec basename -s ".c" {} \;

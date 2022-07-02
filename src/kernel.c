@@ -56,7 +56,7 @@ __attribute__ ((section ("kernel_entry"))) void kernel_main(void)
 
     uint8_t *user;
 
-    uint8_t *usr_domain  = "~PekOS\0";
+    uint8_t *usr_domain  = "@PekOS\0";
 
     // Bool
     static bool is_root = false;
