@@ -36,7 +36,7 @@ CC = clang-11
 
 QEMU or Bochs
 
-ASM = FASM
+ASM = NASM
 
 # Photos
 
