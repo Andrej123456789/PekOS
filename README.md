@@ -1,6 +1,6 @@
 
 # About PekOS
-PekOS is a 32 bit (maybe 64 bit in future?) OS made in C & Assembly. I develop PekOS in my free time.
+PekOS is a 32 bit (maybe 64 bit in future?) OS made in C & Assembly.
 
 ## PekOS Logo (as of Sept. 2022)
 
