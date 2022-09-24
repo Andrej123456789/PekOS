@@ -26,6 +26,10 @@ Version 7.1  - Minor bug fixes, added a "help" & "ver" commands, added a start u
 
 Version 7.2  - Groundwork for user account system, "root" & "whois" commands added, "ver" command updated, new command line look, new font names
 
+## 8.x -- (Bt Kernel)
+
+Version 8   - Bt kernel, i686-elf, New Shell.
+
 ## Other
 GV System 1  - First release of PekOS GV (System 1)
 
@@ -41,13 +45,16 @@ DISK SPACE = 25MB
 
 Debian based system recommend
 
-CC = clang-11
+CC = clang-11       (for 7.x)
+CC = i686-elf-gcc   (for 8.x)
 
 QEMU or Bochs
 
 ASM = NASM
+AS  = i686-elf-as   (for 8.x)
 
 # Photos
 
 # Sources used
-https://github.com/queso-fuego/amateuros
+https://github.com/queso-fuego/amateuros    (for 7.x)
+https://github.com/StjepanBM1/PekOS/docs/Bt/sources-SysII.inf

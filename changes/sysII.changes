@@ -1,0 +1,22 @@
+
+	|-- LIST OF CHANGES IN →  „Bt System II” --|
+
+	[×] NAME CHANGE →  Dropped the „OS” part
+	    	 	   from the project name.
+			   Logo will stay same.
+
+	[×] FILE STRUCT →  Changed the file / di-
+	    	 	   rectory structure.
+
+	[×] GRUB CHANGE →  „Bt System II” now no
+	    	 	   longer uses GRUB boot
+			   loader, instead now
+			   it's just a bootable
+			   kernel binary.
+			   
+	[×] LICENSE	→  All of the code now
+	    		   uses Bt General Li-
+			   cense.
+
+	|-----------------------------------------|
+	

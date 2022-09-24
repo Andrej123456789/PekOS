@@ -1,0 +1,22 @@
+
+	-- ALL SOURCES USED IN → „Bt System II” --
+	[
+		!BOOT
+		Linker file
+        GDT
+        IDT
+        IRQ
+        IRS
+	] http://jamesmolloy.co.uk/tutorial_html/
+
+	[
+		SHELL
+	] Andrej Bartulin - https://github.com/Andrej123456789
+
+	[
+		KEYBOARD
+	] http://www.osdever.net/tutorials/view/brans-kernel-development-tutorial
+
+	[
+		LICENSE
+	] https://github.com/ringwormGO-organization/Docs/blob/main/RGL/RGL

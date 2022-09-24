@@ -1,0 +1,23 @@
+
+    --  LIST OF ALL SOURCES USED IN „BtOS System I”  --
+
+    [
+        IDT
+        GDT
+        IRQ
+        IRS
+        USR SPACE
+        VFS
+    ] http://jamesmolloy.co.uk/tutorial_html/
+
+    [
+        printf
+    ] https://www.kernel.org/
+
+    [
+        BOOT.S
+    ] https://wiki.osdev.org/Bare_Bones#Bootstrap_Assembly
+    
+    [
+        KEYB
+    ] http://www.osdever.net/bkerndev/Docs/title.htm
