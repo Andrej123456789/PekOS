@@ -10,7 +10,7 @@ PekOS is a 32 bit (maybe 64 bit in future?) OS made in C & Assembly.
 
 # VERSION DESCRIPTION
 
-## 3.X
+## 3.x
 Version 3.1  - First public release of PekOS, features 3.x kernel
 
 Version 4.3  - Updated pTerm
