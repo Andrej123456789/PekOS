@@ -56,5 +56,8 @@ AS  = i686-elf-as   (for 8.x)
 # Photos
 
 # Sources used
-https://github.com/queso-fuego/amateuros    (for 7.x)
-https://github.com/StjepanBM1/PekOS/docs/Bt/sources-SysII.inf
+## PekOS 8.x
+https://github.com/StjepanBM1/PekOS/blob/main/docs/Bt/sources-SysII.inf
+
+## PekOS 7.x
+https://github.com/queso-fuego/amateuros
