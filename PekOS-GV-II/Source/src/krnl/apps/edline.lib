@@ -1,0 +1,103 @@
+
+	;%include "src/krnl/txt/puts.s"
+
+	;	DEFINES
+
+	;	FUNCTIONS
+	_edl_scr:
+		call	clear
+		
+		xor	al,	al
+		
+		mov	ah,	09h
+		mov	cx,	2000d
+		mov	al,	20h
+		mov	bl,	0x3F
+		int		0x10
+		
+		mov	ah,	09h
+		mov	cx,	80d
+		mov	al,	20h
+		mov	bl,	0x1E
+		int		0x10
+		
+		mov	si,	_ed_topb
+		call	print
+		
+		ret
+		
+	_ed_inpt:
+	
+			mov	ah,	01h
+			mov	cx,	04h
+			int	0x10
+		
+		.loop:
+			mov	ah,	0x00
+			int		0x16
+			
+			cmp	al,	0x0D
+			je	.newl
+			
+			cmp	al,	0x60
+			je	.retl
+			
+			cmp	al,	0x09
+			je	.tab
+			
+			cmp	al,	27d
+			je	.exit
+
+			mov	ah,	0x0e
+			int		0x10
+			
+			jmp	.loop
+		
+		.newl:
+		
+			mov	al,	0
+			stosb
+		
+			mov	ah,	0x0e
+			mov	al,	0x0D
+			int		0x10
+			
+			mov	al,	0x0A
+			int		0x10
+			
+			mov	ah,	09h
+			mov	cx,	80d
+			mov	al,	20h
+			mov	bl,	0x3F
+			int		0x10
+			
+			ret
+			
+		.retl:
+			
+			mov	dh,	1
+			mov	dl,	0
+			mov	ah,	0x02
+			mov	bh,	0
+			int	0x10
+			
+			ret
+
+		.tab:
+			mov	si,	_tab
+			call	print
+			
+			ret
+
+		.exit:
+			jmp	_kmain
+			ret
+		
+		jmp	.loop
+
+	;	STRINGS
+	_ed_topb:
+		db	">>> ED-LINE 1.0 <<< | ESC = Exit | ` = reset pos. |", 13, 10, 0
+	
+	_tab:
+			db	"    ", 0

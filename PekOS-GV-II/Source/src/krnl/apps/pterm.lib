@@ -1,0 +1,155 @@
+
+        %DEFINE	n	0x0D, 0x0A
+
+           buff    times   512     db      0
+
+           ;       UI
+        _p_scrn:
+                call    clear
+                mov     ah, 09h
+                mov     cx, 2000d
+                mov     al, 177d
+                mov     bl, 0x3F
+                int     0x10
+
+                mov     si,     _p_topb
+                call    print
+
+                ret
+
+        ;       STRINGS
+        _p_topb:
+                db      "  ", \
+                240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, \
+                " pTerm 2.6.1  GV-II " , \
+                240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, \
+                "  ", \
+                0
+
+        _p_prmpt:
+                db      "[%] ", 175, 32, 0
+
+        ;       INPUT
+        inpt:
+                xor     cl,     cl
+
+                .loop:
+                        mov     ah,     0
+                        int     0x16
+
+                        cmp     al,     0x08
+                        je              .bck
+
+                        cmp     al,     0x0D
+                        je              .done
+
+                        cmp     cl,     0x40
+                        je              .loop
+
+                        mov     ah,     0x0e
+                        int             0x10
+
+                        stosb
+                        inc     cl
+                        jmp             .loop
+
+                        .bck:
+                                cmp     cl,     0
+                                je      .loop
+
+                                dec     di
+
+                                mov     byte [di], 0
+
+                                dec     cl
+
+                                mov     ah,     0x0e
+                                mov     al,     0x08
+                                int             0x10
+
+                                mov     al,     20h
+                                int             0x10
+
+                                mov     al,     0x08
+                                int             0x10
+
+                                jmp             .loop
+
+                        .done:
+                                mov     al,     0
+                                stosb
+
+                                mov     ah,     0x0e
+                                mov     al,     0x0D
+                                int             0x10
+
+                                mov     al,     0x0A
+                                int             0x10
+
+                                call    _scroll
+
+                                ret
+
+        _scroll:
+                xor     al,     al
+
+                mov     ah,     0x09
+                mov     cx,     80d
+
+                mov     al,     177d
+                mov     bl,     0x3F
+
+                int             0x10
+
+                ret
+
+        strcmp:
+                .loop:
+                        mov al, [si]
+                        mov bl, [di]
+                        cmp al, bl
+                        jne .notequ
+
+                        cmp al, 0
+                        je .done
+
+                        inc di
+                        inc si
+
+                        jmp .loop
+
+                .notequ:
+                        clc
+                        ret
+
+                .done:
+                        stc
+                        ret
+
+        ;       COMMANDS
+        empt:   db      '',     0
+        ver:    db      'ver',  0
+        clr:    db      'clr',  0
+        hlp:    db      'help', 0
+        ext:    db      'exit', 0
+        pnt:    db      'pant', 0
+        line:   db      'line', 0
+        rbt:    db      'rebt', 0
+        sht:    db      'shut', 0
+
+        err:    db      '       [!!] CMD : Command not found', n, 0
+
+        vers:
+                db      "       (PekOS) ", SYS_VER , n, 0
+
+        helps:
+                db      "       HELP    ::      ", n, \
+                        "               ver     --- system ver.", n, \
+                        "               clr     --- clear scrn.", n, \
+                        "               help    --- help msg.", n, \
+                        "               exit    --- exit term.", n, \
+                        "               pant    --- paint prgm.", n, \
+                        "               line    --- line editor", n, \
+                        "               rebt    --- reboot", n, \
+                        "               shut    --- shutdown", n, \
+                        0

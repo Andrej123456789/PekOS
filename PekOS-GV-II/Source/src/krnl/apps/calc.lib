@@ -1,0 +1,47 @@
+        _calcs:
+            call    clear
+
+            mov	ah,	09h
+            mov	cx,	2000d
+            mov	al,	177d
+            mov	bl,	0x6F
+            int		0x10
+
+            mov si, _calct
+            call    print
+
+            ret
+
+        ;   STRINGS
+        _calct:
+                db      "  ", \
+                240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, \
+                " Calc 1.0.0  GV-II " , \
+                240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, \
+                "  ", \
+                0
+
+        _msg1:
+                db      nl, "  Enter the first number : ", 0
+        ;_msg:
+        ;       db      nl, "  Enter the operator : ", 0
+        _msg2:
+                db      nl, "  Enter the second number : ", 0
+
+        _reslt:
+                db      nl, "  Result : ", 0
+
+        prints:
+            lodsb
+
+            or	al,	al
+            jz	.done
+
+            mov	ah,	0x0E
+            mov	bh,	0
+            int		0x10
+
+            jmp	prints
+
+        .done:
+            ret

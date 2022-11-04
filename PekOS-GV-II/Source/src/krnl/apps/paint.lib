@@ -1,0 +1,214 @@
+
+	;	SCREEN
+	_paint_scr:
+		xor	al,	al
+		
+		mov	ah,	0x09
+		mov	cx,	2000d
+		mov	al,	177d
+		mov	bl,	0x7F
+		int		0x10
+		
+		mov	si,	_paint_topb
+		call	print
+		
+		ret
+	
+	;	CURSORs
+	_def_curs:
+        mov ah, 01h
+		mov cx, 04h
+        int 10h
+		
+		mov	ah,	01h
+		mov	cx,	04h
+		int	0x10
+
+		mov	dl,	0d
+		mov	dh,	0d
+
+        jmp _p_cursor
+
+        _p_cursor:
+			mov	ah,	02h
+			mov	dl,	bl
+			mov	dh,	cl
+			int	0x10
+		
+            mov ah, 00h
+            int 16h
+
+            cmp ah, 0x48            ; UP ARROW KEY
+            je p_up
+
+            cmp ah, 0x50            ; DOWN ARROW KEY
+            je p_down
+
+            cmp ah, 0x4B            ; LEFT ARROW KEY
+            je p_left
+
+            cmp ah, 0x4D            ; RIGHT ARROW KEY
+            je p_right
+
+            cmp al, 113d            ; Q
+            je p_place              ; place a block
+
+            cmp al, 101d            ; E
+            je p_erase              ; erase a block
+
+			;	COLOR
+			cmp	al,	48d
+			je	p_place
+			
+			cmp	al,	49d
+			je	p_blue
+			
+			cmp	al,	50d
+			je	p_green
+			
+			cmp	al,	51d
+			je	p_cyan
+			
+			cmp	al,	52d
+			je	p_red
+			
+			cmp	al,	53d
+			je	p_mag
+			
+			cmp	al,	54d
+			je	p_brw
+			
+			cmp	al,	55d
+			je	p_lgry
+
+			cmp	al,	27d
+			je	_kmain
+
+        
+        p_up:
+            cmp cl, 0h
+            je _p_cursor
+
+            sub cl, 1
+            jmp _p_cursor
+
+        p_down:
+            cmp cl, 24d
+            je _p_cursor
+
+            add cl, 1
+            jmp _p_cursor
+
+        p_left:
+            cmp bl, 0h
+            je _p_cursor
+
+            sub bl, 1
+            jmp _p_cursor
+
+        p_right:
+            cmp bl, 79d
+            je _p_cursor
+
+            add bl, 1
+            jmp _p_cursor
+
+        p_place:
+
+			cli
+			mov	ah,	0x09
+			mov	al,	32d
+			mov	cx,	1d
+			mov	bl,	0x0F
+			int		0x10
+			
+			jmp	_p_cursor
+
+		p_blue:
+			cli
+			
+			mov	ah,	0x09
+			mov	al,	32d
+			mov	cx,	1d
+			mov	bl,	0x1F
+			int		0x10
+
+            jmp _p_cursor
+			
+		p_green:
+			cli
+			
+			mov	ah,	0x09
+			mov	al,	32d
+			mov	cx,	1d
+			mov	bl,	0x2F
+			int		0x10
+
+            jmp _p_cursor
+
+		p_cyan:
+			cli
+			
+			mov	ah,	0x09
+			mov	al,	32d
+			mov	cx,	1d
+			mov	bl,	0x3F
+			int		0x10
+
+            jmp _p_cursor
+
+		p_red:
+			cli
+			
+			mov	ah,	0x09
+			mov	al,	32d
+			mov	cx,	1d
+			mov	bl,	0x4F
+			int		0x10
+
+            jmp _p_cursor
+
+		p_mag:
+			cli
+			
+			mov	ah,	0x09
+			mov	al,	32d
+			mov	cx,	1d
+			mov	bl,	0x5F
+			int		0x10
+
+            jmp _p_cursor
+			
+		p_brw:
+			cli
+			
+			mov	ah,	0x09
+			mov	al,	32d
+			mov	cx,	1d
+			mov	bl,	0x6F
+			int		0x10
+
+            jmp _p_cursor
+
+		p_lgry:
+			cli
+			
+			mov	ah,	0x09
+			mov	al,	32d
+			mov	cx,	1d
+			mov	bl,	0x7F
+			int		0x10
+
+            jmp _p_cursor
+
+        p_erase:
+            mov ah, 0x0e
+            mov al, 32d
+            int 10h
+
+            jmp _p_cursor
+	
+
+	;	STRINGS
+	_paint_topb:
+		db	"| GV Paint 2.0 | Q = Place | E = Erase | 0",26, "7 = Colors | ESC = Exit |", n, 0
