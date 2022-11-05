@@ -2,8 +2,8 @@
 	[BITS		16]
 
 	%DEFINE	SYS_VER	'GV-II System'
-	%DEFINE RELEASE 'Release Ver'
-	%DEFINE BUILD	'11/4/2022-PM'
+	%DEFINE RELEASE 'Second Ed. '
+	%DEFINE BUILD	'11/5/2022-PM'
 	
 	JMP	_kmain
 

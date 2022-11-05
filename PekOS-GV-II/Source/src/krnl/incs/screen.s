@@ -95,8 +95,6 @@
 		mov	ah,	0x00
 		int		0x16
 		
-		jmp	_kmain
-
 		cmp	al,	0x31
 		je		.reboot
 
