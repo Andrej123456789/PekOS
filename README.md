@@ -33,19 +33,12 @@ Version 8   - Bt kernel, i686-elf, New Shell.
 ## Other
 GV System 1  - First release of PekOS GV (System 1)
 
-# System Requirements
-
-RAM = 1 MB
-
-32 BIT PC
-
-DISK SPACE = 25MB
-
 # Requirements for compilation
 
 Debian based system recommend
 
 CC = clang-11       (for 7.x)
+
 CC = i686-elf-gcc   (for 8.x)
 
 QEMU or Bochs
