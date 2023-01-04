@@ -19,7 +19,8 @@ void stdkeyb_handler(uint8_t scancode, uint8_t c)
             switch (leftshift | rightshift)
             {
                 case true:
-                    putc(c - 32);
+                    c = Set2::ScanCodeLookUp2[scancode];
+                    putc(c);
                     break;
                 case false:
                     putc(c);
