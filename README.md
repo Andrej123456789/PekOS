@@ -12,12 +12,11 @@ written in C++ & assembly for the Intel CPU platform.
 | kern      | Kernel directory. |
 
 # Sources used
+[PekOS 9.x](https://youtube.com/playlist?list=PLxN4E629pPnKKqYsNVXpmCza8l0Jb6l8-)
+
 [PekOS 8.x](https://github.com/StjepanBM1/PekOS/blob/8.X-Kernel/docs/Bt/sources-SysII.inf)
 
 [PekOS 7.x](https://github.com/queso-fuego/amateuros)
-
-[PekOS 9.x](https://youtube.com/playlist?list=PLxN4E629pPnKKqYsNVXpmCza8l0Jb6l8-)
-
 
 # Requirements for compilation
 Check the NEEDED.md
