@@ -17,29 +17,24 @@ struct idt64
     uint32_t    zero;
 };
 extern idt64 _idt[256];
+extern uint64_t isr0;
 extern uint64_t isr1;
 extern uint64_t isr12;
 extern uint64_t isr14;
 extern "C" void loadidt();
 
-extern "C" void divide_by_zero_exception_handler()
-{
-    puts("You cannot divide by zero!\n");
-    asm("cli; hlt"); /* halt the CPU */
-}
-
 void init_idt()
 {
-    // Divide by zero
+    /* Divide by zero */
     _idt[0].zero        =   0;
-    _idt[0].offset_l    =   (uint16_t)(((uint64_t)&divide_by_zero_exception_handler & 0x000000000000ffff));
-    _idt[0].offset_mid  =   (uint16_t)(((uint64_t)&divide_by_zero_exception_handler & 0x00000000ffff0000) >> 16);
-    _idt[0].offset_hig  =   (uint16_t)(((uint64_t)&divide_by_zero_exception_handler & 0x00000000ffff0000) >> 32);
+    _idt[0].offset_l    =   (uint16_t)(((uint64_t)&isr0 & 0x000000000000ffff));
+    _idt[0].offset_mid  =   (uint16_t)(((uint64_t)&isr0 & 0x00000000ffff0000) >> 16);
+    _idt[0].offset_hig  =   (uint16_t)(((uint64_t)&isr0 & 0x00000000ffff0000) >> 32);
     _idt[0].ist         =   0;
     _idt[0].selector    =   0x08;
     _idt[0].types_attrb =   0x8e;
 
-    // Keyboard
+    /* Keyboard */
     _idt[1].zero        =   0;
     _idt[1].offset_l    =   (uint16_t)(((uint64_t)&isr1 & 0x000000000000ffff));
     _idt[1].offset_mid  =   (uint16_t)(((uint64_t)&isr1 & 0x00000000ffff0000) >> 16);
@@ -48,7 +43,7 @@ void init_idt()
     _idt[1].selector    =   0x08;
     _idt[1].types_attrb =   0x8e;
 
-    // Mouse - broken
+    /* Mouse - broken */
     _idt[12].zero       =   0;
     _idt[12].offset_l   =   (uint16_t)(((uint64_t)&isr12 & 0x000000000000ffff));
     _idt[12].offset_mid =   (uint16_t)(((uint64_t)&isr12 & 0x00000000ffff0000) >> 16);
@@ -57,7 +52,7 @@ void init_idt()
     _idt[12].selector   =   0x08;
     _idt[12].types_attrb=   0x8e;
 
-    // Page fault
+    /* Page fault */
     _idt[14].zero       =   0;
     _idt[14].offset_l   =   (uint16_t)(((uint64_t)&isr14 & 0x000000000000ffff));
     _idt[14].offset_mid =   (uint16_t)(((uint64_t)&isr14 & 0x00000000ffff0000) >> 16);
@@ -75,6 +70,12 @@ void init_idt()
 }
 
 void (*MainKBHandler)(uint8_t scancode, uint8_t c);
+
+extern "C" void isr0_handler()
+{
+    puts("You cannot divide by zero!\n");
+    asm("cli; hlt"); /* halt the CPU */
+}
 
 extern "C" void isr1_handler()
 {

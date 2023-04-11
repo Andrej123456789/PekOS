@@ -25,6 +25,15 @@
         pop rax
     %endmacro
 
+    [extern     isr0_handler]
+    isr0:
+        pushall
+        call isr0_handler
+        popall
+
+        iretq
+        GLOBAL isr0
+
     [extern     isr1_handler]
     isr1:
         pushall

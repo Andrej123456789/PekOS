@@ -35,11 +35,8 @@ void remap_pic()
 
     outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);
     outb(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
-    //outb(PIC1_DATA, 0x20);
-    //outb(PIC2_DATA, 0x28);
-
-    outb(PIC1_DATA, 0);
-    outb(PIC2_DATA, 8);
+    outb(PIC1_DATA, 0); /* 0x20 - broken */
+    outb(PIC2_DATA, 8); /* 0x28 - broken */
     outb(PIC1_DATA, 4);
     outb(PIC2_DATA, 2);
     outb(PIC1_DATA, ICW4_8086);
@@ -49,11 +46,13 @@ void remap_pic()
     outb(PIC2_DATA, a2);
 }
 
-void PIC_EndMaster(){
+void pic_end_master()
+{
     outb(PIC1_COMMAND, PIC_EOI);
 }
 
-void PIC_EndSlave(){
+void pic_end_slave()
+{
     outb(PIC2_COMMAND, PIC_EOI);
     outb(PIC1_COMMAND, PIC_EOI);
 }
