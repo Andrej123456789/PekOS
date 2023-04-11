@@ -12,6 +12,8 @@
 #define     ICW1_ICW4           0x01
 #define     ICW4_8086           0x01
 
+#define     PIC_EOI             0x20
+
 void outb(uint16_t port, uint8_t val)
 {
     asm volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
@@ -33,6 +35,9 @@ void remap_pic()
 
     outb(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);
     outb(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
+    //outb(PIC1_DATA, 0x20);
+    //outb(PIC2_DATA, 0x28);
+
     outb(PIC1_DATA, 0);
     outb(PIC2_DATA, 8);
     outb(PIC1_DATA, 4);
@@ -42,4 +47,13 @@ void remap_pic()
 
     outb(PIC1_DATA, a1);
     outb(PIC2_DATA, a2);
+}
+
+void PIC_EndMaster(){
+    outb(PIC1_COMMAND, PIC_EOI);
+}
+
+void PIC_EndSlave(){
+    outb(PIC2_COMMAND, PIC_EOI);
+    outb(PIC1_COMMAND, PIC_EOI);
 }

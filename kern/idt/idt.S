@@ -34,6 +34,24 @@
         iretq
         GLOBAL  isr1
 
+    [extern     isr12_handler]
+    isr12:
+        pushall
+        call    isr12_handler
+        popall
+
+        iretq
+        GLOBAL  isr12
+
+    [extern     isr14_handler]
+    isr14:
+        pushall
+        call    isr14_handler
+        popall
+
+        iretq
+        GLOBAL  isr14
+
     loadidt:
         lidt    [idt_desc]
         sti
