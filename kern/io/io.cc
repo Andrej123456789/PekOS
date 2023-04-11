@@ -51,8 +51,7 @@ void pic_end_master()
     outb(PIC1_COMMAND, PIC_EOI);
 }
 
-void pic_end_slave()
-{
+void pic_end_slave(){
     outb(PIC2_COMMAND, PIC_EOI);
     outb(PIC1_COMMAND, PIC_EOI);
 }
